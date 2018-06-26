@@ -150,7 +150,9 @@ public void saveAction() {
 		plant = comboBoxPlant.getSelectionModel().getSelectedItem();
 	
 	Movie movie = new Movie(textFieldTitle.getText(), filename, fileUrl, category, plant, textAreaNote.getText());
-	//db.addMovie();
+	movie.setListActor(listActor);
+	db.addMovie(movie);
+	MovieView view = new MovieView(stage, db);
 }
  
  

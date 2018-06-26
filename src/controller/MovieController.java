@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import DataBase.DataBase;
 import javafx.application.Platform;
+import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
@@ -59,5 +60,9 @@ public Object viewAction() {
 public Object filtrAction() {
 	// TODO Auto-generated method stub
 	return null;
+}
+
+public ObservableList<Movie> getMovies() {
+	return db.getAllMovies();
 }
 }

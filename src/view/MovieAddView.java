@@ -126,7 +126,7 @@ private void setActionsForButtons() {
 	buttonCencel.setOnAction(e-> controller.cencelAcion());
 	buttonFileChooser.setOnAction(e-> controller.getSelectedFile());
 	buttonActor.setOnAction(e-> controller.getActorsAction());
-	
+	buttonSava.setOnAction(e-> controller.saveAction());
 }
 
 private void setStage() {

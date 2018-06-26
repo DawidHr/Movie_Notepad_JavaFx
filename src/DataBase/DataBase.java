@@ -9,6 +9,8 @@ import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import model.Actor;
 import model.Category;
 import model.Movie;
@@ -105,6 +107,36 @@ public class DataBase {
 		}
 	}
 
+	public int getIdCategoryByTitle(String category) {
+		String query = "select id from Category where name=?";
+		int id=0;
+		try {
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setString(1, category);
+			ResultSet rs = stat.executeQuery();
+			while(rs.next()) {
+				id=rs.getInt("id");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
+	public String getStringCategoryByTitle(int id) {
+		String name="";
+		String query = "select name from Category where id=?";
+		try {
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setInt(1, id);
+			ResultSet rs = stat.executeQuery();
+			while(rs.next()) {
+				name= rs.getString("name");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return name;
+	}
 	/* WYTWORNIE */
 	
 	//Pobieranie wszystkich wytworni
@@ -174,6 +206,38 @@ public class DataBase {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	public int getIdPlantByTitle(String plant) {
+		String query = "select id from Plant where name=?";
+		int id=0;
+		try {
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setString(1, plant);
+			ResultSet rs = stat.executeQuery();
+			while(rs.next()) {
+				id=rs.getInt("id");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
+	
+	public String getStringPlantByTitle(int id) {
+		String plant="";
+		String query = "select name from Plant where id=?";
+		try {
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setInt(1, id);
+			ResultSet rs = stat.executeQuery();
+			while(rs.next()) {
+				plant=rs.getString("name");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return plant;
 	}
 /*Aktorzy*/
 	
@@ -273,6 +337,42 @@ public class DataBase {
 			e.printStackTrace();
 		}
 		
+	}
+
+	public void addMovie(Movie movie) {
+		String query = "insert into Movie(title, file_title, file_url, id_category, id_Plant) values(?, ?, ?, ?, ?)";
+		try {
+			int id_category = getIdCategoryByTitle(movie.getCategory());
+			int id_Plant = getIdPlantByTitle(movie.getPlant());
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setString(1, movie.getTitle());
+			stat.setString(2, movie.getFile_title());
+			stat.setString(3, movie.getFile_url());
+			stat.setInt(4, id_category);
+			stat.setInt(5, id_Plant);
+			stat.executeUpdate();
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	public ObservableList<Movie> getAllMovies() {
+		ObservableList<Movie> list = FXCollections.observableArrayList();
+		String query = "select * from Movie";
+		try {
+			Statement stat = conn.createStatement();
+			ResultSet rs = stat.executeQuery(query);
+			while(rs.next()) {
+				String category = getStringCategoryByTitle(rs.getInt("id_category"));
+				String Plant = getStringPlantByTitle(rs.getInt("id_Plant"));
+				list.add(new Movie(rs.getInt("id"), rs.getString("title"), rs.getString("file_title"), rs.getString("file_url"), category, Plant, rs.getString("note")));
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 	
 
