@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public class Movie {
 private int id;
 private String title;
@@ -7,7 +9,9 @@ private String file_title;
 private String file_url;
 private String category;
 private String plant;
-public Movie(int id, String title, String file_title, String file_url, String category, String plant) {
+private String note;
+private List<Actor> listActor;
+public Movie(int id, String title, String file_title, String file_url, String category, String plant, String note) {
 	super();
 	this.id = id;
 	this.title = title;
@@ -15,6 +19,16 @@ public Movie(int id, String title, String file_title, String file_url, String ca
 	this.file_url = file_url;
 	this.category = category;
 	this.plant = plant;
+	this.note=note;
+}
+public Movie(String title, String file_title, String file_url, String category, String plant, String note) {
+	super();
+	this.title = title;
+	this.file_title = file_title;
+	this.file_url = file_url;
+	this.category = category;
+	this.plant = plant;
+	this.note=note;
 }
 public int getId() {
 	return id;
@@ -48,6 +62,18 @@ public void setCategory(String category) {
 }
 public void setPlant(String plant) {
 	this.plant = plant;
+}
+public String getNote() {
+	return note;
+}
+public void setNote(String note) {
+	this.note = note;
+}
+public List<Actor> getListActor() {
+	return listActor;
+}
+public void setListActor(List<Actor> listActor) {
+	this.listActor = listActor;
 }
 
 

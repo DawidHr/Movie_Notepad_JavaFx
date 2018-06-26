@@ -20,12 +20,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
 import model.Actor;
+import model.Movie;
 
 public class MovieAddActorsView {
 Stage stage;
 DataBase db;
 MovieAddActorsController controller;
-
+Movie movie;
 GridPane panel = new GridPane();
 
 Button buttonAddActor = new Button("Dodaj");
@@ -48,11 +49,12 @@ TableColumn<Actor, String> col14 = new TableColumn<Actor, String>("P³eæ");
 ObservableList<Actor> list2 = FXCollections.observableArrayList();
 
 
-public MovieAddActorsView(Stage stage, DataBase db) {
+public MovieAddActorsView(Stage stage, DataBase db, Movie movie) {
 	super();
 	this.stage = stage;
 	this.db = db;
-	controller = new MovieAddActorsController(stage, db);
+	this.movie=movie;
+	controller = new MovieAddActorsController(stage, db, movie, buttonAddActor, buttonDeleteActor, buttonCencel, buttonSave, tableAllActors, tableSelectedActors);
 	main();
 	setStage();
 }
@@ -190,6 +192,7 @@ private void setButtons() {
 	});
 	
 	buttonCencel.setOnAction(e-> controller.cencelAction());
+	buttonSave.setOnAction(e-> controller.saveAction());
 }
 
 public void setStage() {

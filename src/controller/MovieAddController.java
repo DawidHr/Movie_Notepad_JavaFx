@@ -6,10 +6,16 @@ import java.util.List;
 import DataBase.DataBase;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.FileChooser.ExtensionFilter;
+import model.Actor;
 import model.Category;
+import model.Movie;
 import view.MovieAddActorsView;
 import view.MovieView;
 
@@ -17,14 +23,47 @@ public class MovieAddController {
 Stage stage;
 DataBase db;
 
+
+TextField textFieldTitle;
+ComboBox<String> comboBoxCategory;
+ComboBox<String> comboBoxPlant;
+TextArea textAreaNote;
+
+Button buttonCencel;
+Button buttonSava;
+Button buttonFileChooser;
+Button buttonActor;
+
+
 File file=null;
+List<Actor> listActor;
 
  public MovieAddController(Stage stage, DataBase db) {
 	 this.stage=stage;
 	 this.db=db;
  }
  
- public ObservableList<String> getCategoryList() {
+ 
+ 
+ public MovieAddController(Stage stage, DataBase db, TextField textFieldTitle, ComboBox<String> comboBoxCategory,
+		ComboBox<String> comboBoxPlant, TextArea textAreaNote, Button buttonCencel, Button buttonSava,
+		Button buttonFileChooser, Button buttonActor) {
+	super();
+	this.stage = stage;
+	this.db = db;
+	this.textFieldTitle = textFieldTitle;
+	this.comboBoxCategory = comboBoxCategory;
+	this.comboBoxPlant = comboBoxPlant;
+	this.textAreaNote = textAreaNote;
+	this.buttonCencel = buttonCencel;
+	this.buttonSava = buttonSava;
+	this.buttonFileChooser = buttonFileChooser;
+	this.buttonActor = buttonActor;
+}
+
+
+
+public ObservableList<String> getCategoryList() {
 	  List<Category> list = db.getAllCategories();
 	  ObservableList<String> listString = FXCollections.observableArrayList();
 	  for(Category c : list) {
@@ -54,7 +93,64 @@ File file=null;
  }
 
 public void getActorsAction() {
-	MovieAddActorsView main = new MovieAddActorsView(stage, db);
+	String filename = "";
+	String fileUrl = "";
+	String category = "";
+	String plant = "";
+	if(file != null) {
+		filename = file.getName();
+		fileUrl = file.getAbsolutePath();
+	}
+	if(comboBoxCategory.getSelectionModel().getSelectedItem() != null)
+		category= comboBoxCategory.getSelectionModel().getSelectedItem();
+	if(comboBoxPlant.getSelectionModel().getSelectedItem() != null)
+		plant = comboBoxPlant.getSelectionModel().getSelectedItem();
+	
+	Movie movie = new Movie(textFieldTitle.getText(), filename, fileUrl, category, plant, textAreaNote.getText());
+	MovieAddActorsView main = new MovieAddActorsView(stage, db, movie);
+}
+
+
+
+public void setData(Movie movie) {
+	textFieldTitle.setText(movie.getTitle());
+	textAreaNote.setText(movie.getNote());
+	if(movie.getCategory() != "")
+		comboBoxCategory.getSelectionModel().select(movie.getCategory());
+	if(movie.getPlant() != "")
+		comboBoxPlant.getSelectionModel().select(movie.getPlant());
+	if(movie.getFile_url() != "")
+		file = new File(movie.getFile_url());
+	if(!movie.getListActor().isEmpty())
+		listActor=movie.getListActor();
+	
+}
+
+
+
+public void saveAction() {
+	//Sprawdzenie czy pola nie sa puste
+	if(textFieldTitle.getText().isEmpty())
+		return;
+	if(comboBoxCategory.getSelectionModel().getSelectedItem() == null)
+		return;
+	if(file == null)
+		return;
+	String filename = "";
+	String fileUrl = "";
+	String category = "";
+	String plant = "";
+	if(file != null) {
+		filename = file.getName();
+		fileUrl = file.getAbsolutePath();
+	}
+	if(comboBoxCategory.getSelectionModel().getSelectedItem() != null)
+		category= comboBoxCategory.getSelectionModel().getSelectedItem();
+	if(comboBoxPlant.getSelectionModel().getSelectedItem() != null)
+		plant = comboBoxPlant.getSelectionModel().getSelectedItem();
+	
+	Movie movie = new Movie(textFieldTitle.getText(), filename, fileUrl, category, plant, textAreaNote.getText());
+	//db.addMovie();
 }
  
  

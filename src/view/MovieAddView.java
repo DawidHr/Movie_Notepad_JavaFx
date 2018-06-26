@@ -14,12 +14,13 @@ import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.stage.Stage;
+import model.Movie;
 
 public class MovieAddView {
 Stage stage;
 DataBase db;
 MovieAddController controller;
-
+Movie movie;
 GridPane panel = new GridPane();
 
 TextField textFieldTitle = new TextField();
@@ -35,9 +36,21 @@ public MovieAddView(Stage stage, DataBase db) {
 	super();
 	this.stage = stage;
 	this.db = db;
-	controller = new MovieAddController(stage, db);
+	//controller = new MovieAddController(stage, db);
+	controller = new MovieAddController(stage, db, textFieldTitle, comboBoxCategory, comboBoxPlant, textAreaNote, buttonCencel, buttonSava, buttonFileChooser, buttonActor);
 	main();
 	setStage();
+}
+
+public MovieAddView(Stage stage, DataBase db, Movie movie) {
+	super();
+	this.stage = stage;
+	this.db = db;
+	this.movie=movie;
+	controller = new MovieAddController(stage, db, textFieldTitle, comboBoxCategory, comboBoxPlant, textAreaNote, buttonCencel, buttonSava, buttonFileChooser, buttonActor);
+	main();
+	setStage();
+	controller.setData(movie);
 }
 
 private void main() {
