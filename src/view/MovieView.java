@@ -88,7 +88,7 @@ private void setPanel() {
 private void setActionEvent() {
 	buttonCencel.setOnAction(e-> controller.cencelAction());
 	buttonDelete.setOnAction(e-> controller.deleteAction(table.getSelectionModel().getSelectedItem()));
-	buttonEdit.setOnAction(e-> controller.editAction());
+	buttonEdit.setOnAction(e-> controller.editAction(table.getSelectionModel().getSelectedItem()));
 	buttonAdd.setOnAction(e-> controller.addAction());
 	buttonView.setOnAction(e-> controller.viewAction());
 	buttonFilt.setOnAction(e-> controller.filtrAction());

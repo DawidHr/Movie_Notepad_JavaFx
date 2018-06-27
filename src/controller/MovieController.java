@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import DataBase.DataBase;
@@ -8,10 +10,13 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
+import model.Actor;
 import model.Movie;
 import view.CategoryView;
 import view.MainView;
 import view.MovieAddView;
+import view.MovieEditView;
+import view.MovieView;
 
 public class MovieController {
 Stage stage;
@@ -29,13 +34,13 @@ public void cencelAction() {
 public void deleteAction(Movie movie) {
 	Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
 	dialog.setTitle("Ostrzezenie przed kasacja");
-	dialog.setHeaderText("Czy chcesz skasowac "+movie+"");
+	dialog.setHeaderText("Czy chcesz skasowac "+movie.getTitle()+"");
 	Platform.runLater(() ->{
 		Optional<ButtonType> response = dialog.showAndWait();
 		System.out.println(response.get().getText());
 		if(response.get().getText().equals("OK")) {
 			deleteMovie(movie);
-			CategoryView view = new CategoryView(stage, db);}
+			MovieView view = new MovieView(stage, db);}
 	});
 }
 
@@ -43,9 +48,10 @@ private void deleteMovie(Movie movie) {
 	db.deleteMovie(movie);
 }
 
-public Object editAction() {
-	// TODO Auto-generated method stub
-	return null;
+public void  editAction(Movie movie) {
+	List<Actor> list = new LinkedList<>();
+	movie.setListActor(list);
+	MovieEditView view = new MovieEditView(stage, db, movie);
 }
 
 public void addAction() {

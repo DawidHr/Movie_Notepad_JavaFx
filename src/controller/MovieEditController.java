@@ -19,7 +19,7 @@ import model.Movie;
 import view.MovieAddActorsView;
 import view.MovieView;
 
-public class MovieAddController {
+public class MovieEditController {
 Stage stage;
 DataBase db;
 
@@ -36,16 +36,16 @@ Button buttonActor;
 
 
 File file=null;
-List<Actor> listActor;
+List<Actor> listActor=null;
 
- public MovieAddController(Stage stage, DataBase db) {
+ public MovieEditController(Stage stage, DataBase db) {
 	 this.stage=stage;
 	 this.db=db;
  }
  
  
  
- public MovieAddController(Stage stage, DataBase db, TextField textFieldTitle, ComboBox<String> comboBoxCategory,
+ public MovieEditController(Stage stage, DataBase db, TextField textFieldTitle, ComboBox<String> comboBoxCategory,
 		ComboBox<String> comboBoxPlant, TextArea textAreaNote, Button buttonCencel, Button buttonSava,
 		Button buttonFileChooser, Button buttonActor) {
 	super();
@@ -152,8 +152,6 @@ public void saveAction() {
 	Movie movie = new Movie(textFieldTitle.getText(), filename, fileUrl, category, plant, textAreaNote.getText());
 	movie.setListActor(listActor);
 	db.addMovie(movie);
-	int id_movie = db.getIdMovie(movie);
-	db.addActorsToMovie(id_movie, listActor);
 	MovieView view = new MovieView(stage, db);
 }
  

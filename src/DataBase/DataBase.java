@@ -375,5 +375,35 @@ public class DataBase {
 		return list;
 	}
 	
+	//Pobieranie id filmu
+	public int getIdMovie(Movie movie) {
+		int id=0;
+		String query = "select id from Movie where title=? and file_title=?";
+		try {
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setString(1, movie.getTitle());
+			stat.setString(2, movie.getFile_title());
+			ResultSet rs = stat.executeQuery();
+			while(rs.next()) {
+				id=rs.getInt("id");
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return id;
+	}
 
+	public void addActorsToMovie(int id_movie, List<Actor> listActor) {
+		String query = "insert into Movie_Actor(id_movie, id_actor) values(?, ?)";
+		try {
+			for(int i=0;i<listActor.size();i++) {
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setInt(1, id_movie);
+			stat.setInt(2, listActor.get(i).getId());
+			stat.executeUpdate();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 }
