@@ -352,6 +352,60 @@ public class DataBase {
 			stat.setInt(5, id_Plant);
 			stat.executeUpdate();
 			
+			int id=0;
+			String query2 = "select * from Movie where title=? and file_title=? and file_url =?";
+			PreparedStatement stat1 = conn.prepareStatement(query2);
+			stat1.setString(1, movie.getTitle());
+			stat1.setString(2, movie.getFile_title());
+			stat1.setString(3, movie.getFile_url());
+			ResultSet rs  = stat1.executeQuery();
+			while(rs.next()) {
+				id= rs.getInt("id");
+			}
+			String query3 = "insert into Movie_Actor(id_movie, id_actor) values(?,?)";
+			for(int i=0; i<movie.getListActor().size();i++) {
+			PreparedStatement stat2 = conn.prepareStatement(query3);
+			stat2.setInt(1, id);
+			stat2.setInt(2, movie.getListActor().get(i).getId());
+			stat2.executeUpdate();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void updateMovie(Movie movie) {
+		String query = "update Movie set title=?, file_title=?, file_url=?, id_category=?, id_Plant=? where id=?";
+		try {
+			int id_category = getIdCategoryByTitle(movie.getCategory());
+			int id_Plant = getIdPlantByTitle(movie.getPlant());
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setString(1, movie.getTitle());
+			stat.setString(2, movie.getFile_title());
+			stat.setString(3, movie.getFile_url());
+			stat.setInt(4, id_category);
+			stat.setInt(5, id_Plant);
+			stat.setInt(6, movie.getId());
+			stat.executeUpdate();
+			
+			int id=0;
+			String query2 = "select * from Movie where title=? and file_title=? and file_url =?";
+			PreparedStatement stat1 = conn.prepareStatement(query2);
+			stat1.setString(1, movie.getTitle());
+			stat1.setString(2, movie.getFile_title());
+			stat1.setString(3, movie.getFile_url());
+			ResultSet rs  = stat1.executeQuery();
+			while(rs.next()) {
+				id= rs.getInt("id");
+			}
+			String query3 = "insert into Movie_Actor(id_movie, id_actor) values(?,?)";
+			for(int i=0; i<movie.getListActor().size();i++) {
+			PreparedStatement stat2 = conn.prepareStatement(query3);
+			stat2.setInt(1, id);
+			stat2.setInt(2, movie.getListActor().get(i).getId());
+			stat2.executeUpdate();
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -405,5 +459,29 @@ public class DataBase {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public List<Actor> getMovie_Actors(int id) {
+		List<Actor> list = new LinkedList<>();
+		String query = "select * from Movie_Actor where id_movie=?";
+		try {
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setInt(1, id);
+			ResultSet rs = stat.executeQuery();
+			while(rs.next()) {
+		
+				String query1 = "select * from Actor where id=?";
+				PreparedStatement stat1 = conn.prepareStatement(query1);
+				stat1.setInt(1, rs.getInt("id_actor"));
+				ResultSet rs1 = stat1.executeQuery();
+				while(rs1.next()) {
+					list.add(new Actor(rs1.getInt("id"), rs1.getString("name"), rs1.getString("name2"), rs1.getString("pseudo"),  rs1.getString("sex"), rs1.getString("hair_color"), rs1.getString("hair_size"), rs1.getString("note")));
+				}
+				
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		return list;
 	}
 }

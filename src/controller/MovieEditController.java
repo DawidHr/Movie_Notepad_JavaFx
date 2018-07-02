@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.File;
+import java.util.LinkedList;
 import java.util.List;
 
 import DataBase.DataBase;
@@ -17,48 +18,49 @@ import model.Actor;
 import model.Category;
 import model.Movie;
 import view.MovieAddActorsView;
+import view.MovieEditView;
 import view.MovieView;
 
 public class MovieEditController {
 Stage stage;
 DataBase db;
-
-
-TextField textFieldTitle;
-ComboBox<String> comboBoxCategory;
-ComboBox<String> comboBoxPlant;
-TextArea textAreaNote;
-
-Button buttonCencel;
-Button buttonSava;
-Button buttonFileChooser;
-Button buttonActor;
-
+MovieEditView view;
+// Mode. 1 jeœli dodawanie nowych, 2. jesli edycja 
+int mode;
 
 File file=null;
-List<Actor> listActor=null;
+List<Actor> listActor= new LinkedList<>();
 
- public MovieEditController(Stage stage, DataBase db) {
+ public MovieEditController(Stage stage, DataBase db, int mode) {
 	 this.stage=stage;
 	 this.db=db;
+	 this.mode=mode;
+	 view = new MovieEditView(stage, db);
+	 if(mode == 1)
+		 MainForAdd();
+	 else
+		 MainForEdit();
  }
  
- 
- 
- public MovieEditController(Stage stage, DataBase db, TextField textFieldTitle, ComboBox<String> comboBoxCategory,
-		ComboBox<String> comboBoxPlant, TextArea textAreaNote, Button buttonCencel, Button buttonSava,
-		Button buttonFileChooser, Button buttonActor) {
-	super();
-	this.stage = stage;
-	this.db = db;
-	this.textFieldTitle = textFieldTitle;
-	this.comboBoxCategory = comboBoxCategory;
-	this.comboBoxPlant = comboBoxPlant;
-	this.textAreaNote = textAreaNote;
-	this.buttonCencel = buttonCencel;
-	this.buttonSava = buttonSava;
-	this.buttonFileChooser = buttonFileChooser;
-	this.buttonActor = buttonActor;
+ public MovieEditController(Stage stage2, DataBase db2, Movie movie, int mode2) {
+	 this.stage=stage2;
+	 this.db=db2;
+	 this.mode=mode2;
+	 view = new MovieEditView(stage, db);
+	 if(mode == 1)
+		 MainForAdd();
+	 else
+		 MainForEdit();
+	 setData(movie);
+}
+
+private void MainForAdd() {
+	 view.setComboBoxCategory(getCategoryList());
+	 view.setComboBoxPlant(getPlantList());
+	 setActionsForButtons();
+ }
+private void MainForEdit() {
+	
 }
 
 
@@ -76,6 +78,18 @@ public ObservableList<String> getCategoryList() {
 	List<String> list = db.getAllPlant();
 	ObservableList<String> listString = FXCollections.observableArrayList(list);
 	return listString;
+ }
+ 
+ private void setActionsForButtons() {
+	 Button buttonCencel = view.getButtonCencel();
+	 Button buttonFileChooser = view.getButtonFileChooser();
+	 Button buttonActors = view.getButtonActor();
+	 Button buttonSave = view.getButtonSava();
+	 
+	 buttonCencel.setOnAction(e-> cencelAcion());
+	 buttonFileChooser.setOnAction(e-> getSelectedFile());
+	 buttonActors.setOnAction(e-> getActorsAction());
+	 buttonSave.setOnAction(e-> saveAction());
  }
  
  public void getSelectedFile() { 	
@@ -101,24 +115,24 @@ public void getActorsAction() {
 		filename = file.getName();
 		fileUrl = file.getAbsolutePath();
 	}
-	if(comboBoxCategory.getSelectionModel().getSelectedItem() != null)
-		category= comboBoxCategory.getSelectionModel().getSelectedItem();
-	if(comboBoxPlant.getSelectionModel().getSelectedItem() != null)
-		plant = comboBoxPlant.getSelectionModel().getSelectedItem();
+	if(view.getComboBoxCategory().getSelectionModel().getSelectedItem() != null)
+		category= view.getComboBoxCategory().getSelectionModel().getSelectedItem();
+	if(view.getComboBoxPlant().getSelectionModel().getSelectedItem() != null)
+		plant = view.getComboBoxPlant().getSelectionModel().getSelectedItem();
 	
-	Movie movie = new Movie(textFieldTitle.getText(), filename, fileUrl, category, plant, textAreaNote.getText());
-	MovieAddActorsView main = new MovieAddActorsView(stage, db, movie);
+	Movie movie = new Movie(view.getTextFieldTitle().getText(), filename, fileUrl, category, plant, view.getTextAreaNote().getText());
+	MovieEditActorsController main = new MovieEditActorsController(stage, db, movie, mode);
 }
 
 
 
 public void setData(Movie movie) {
-	textFieldTitle.setText(movie.getTitle());
-	textAreaNote.setText(movie.getNote());
+	view.getTextFieldTitle().setText(movie.getTitle());
+	view.getTextAreaNote().setText(movie.getNote());
 	if(movie.getCategory() != "")
-		comboBoxCategory.getSelectionModel().select(movie.getCategory());
+		view.getComboBoxCategory().getSelectionModel().select(movie.getCategory());
 	if(movie.getPlant() != "")
-		comboBoxPlant.getSelectionModel().select(movie.getPlant());
+		view.getComboBoxPlant().getSelectionModel().select(movie.getPlant());
 	if(movie.getFile_url() != "")
 		file = new File(movie.getFile_url());
 	if(!movie.getListActor().isEmpty())
@@ -130,9 +144,9 @@ public void setData(Movie movie) {
 
 public void saveAction() {
 	//Sprawdzenie czy pola nie sa puste
-	if(textFieldTitle.getText().isEmpty())
+	if(view.getTextAreaNote().getText().isEmpty())
 		return;
-	if(comboBoxCategory.getSelectionModel().getSelectedItem() == null)
+	if(view.getComboBoxCategory().getSelectionModel().getSelectedItem() == null)
 		return;
 	if(file == null)
 		return;
@@ -144,16 +158,19 @@ public void saveAction() {
 		filename = file.getName();
 		fileUrl = file.getAbsolutePath();
 	}
-	if(comboBoxCategory.getSelectionModel().getSelectedItem() != null)
-		category= comboBoxCategory.getSelectionModel().getSelectedItem();
-	if(comboBoxPlant.getSelectionModel().getSelectedItem() != null)
-		plant = comboBoxPlant.getSelectionModel().getSelectedItem();
+	if(view.getComboBoxCategory().getSelectionModel().getSelectedItem() != null)
+		category= view.getComboBoxCategory().getSelectionModel().getSelectedItem();
+	if(view.getComboBoxPlant().getSelectionModel().getSelectedItem() != null)
+		plant = view.getComboBoxPlant().getSelectionModel().getSelectedItem();
 	
-	Movie movie = new Movie(textFieldTitle.getText(), filename, fileUrl, category, plant, textAreaNote.getText());
+	Movie movie = new Movie(view.getTextFieldTitle().getText(), filename, fileUrl, category, plant, view.getTextAreaNote().getText());
 	movie.setListActor(listActor);
+	if(mode==1) 
 	db.addMovie(movie);
-	MovieView view = new MovieView(stage, db);
+	else
+	db.updateMovie(movie);	
+	MovieView view = new MovieView(stage, db); 
 }
- 
+
  
 }

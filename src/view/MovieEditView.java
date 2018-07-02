@@ -20,8 +20,7 @@ import model.Movie;
 public class MovieEditView {
 Stage stage;
 DataBase db;
-MovieEditController controller;
-Movie movie;
+
 GridPane panel = new GridPane();
 
 TextField textFieldTitle = new TextField();
@@ -33,25 +32,13 @@ Button buttonCencel = new Button("Wstecz");
 Button buttonSava = new Button("Zapisz");
 Button buttonFileChooser = new Button("Plik");
 Button buttonActor = new Button("Aktorzy");
+
 public MovieEditView(Stage stage, DataBase db) {
 	super();
 	this.stage = stage;
 	this.db = db;
-	//controller = new MovieAddController(stage, db);
-	controller = new MovieEditController(stage, db, textFieldTitle, comboBoxCategory, comboBoxPlant, textAreaNote, buttonCencel, buttonSava, buttonFileChooser, buttonActor);
 	main();
 	setStage();
-}
-
-public MovieEditView(Stage stage, DataBase db, Movie movie) {
-	super();
-	this.stage = stage;
-	this.db = db;
-	this.movie=movie;
-	controller = new MovieEditController(stage, db, textFieldTitle, comboBoxCategory, comboBoxPlant, textAreaNote, buttonCencel, buttonSava, buttonFileChooser, buttonActor);
-	main();
-	setStage();
-	controller.setData(movie);
 }
 
 private void main() {
@@ -61,12 +48,10 @@ private void main() {
 	comboBoxPlant.setPromptText("Wytwórnia");
 	
 	addNodesToPanel();
-	setComboBoxCategory();
-	setComboBoxPlant();
+
 	setMarginsOnPanel();
 	setColumnSize();
 	setRowSize();
-	setActionsForButtons();
 }
 
 private void addNodesToPanel() {
@@ -81,13 +66,19 @@ private void addNodesToPanel() {
 	panel.getChildren().addAll(textFieldTitle, comboBoxCategory, buttonFileChooser, comboBoxPlant, buttonActor, textAreaNote, buttonCencel, buttonSava);
 }
 
-private void setComboBoxCategory() {
-	ObservableList<String> observableListCategory = controller.getCategoryList();
+public void setComboBoxCategory(ObservableList<String> observableListCategory) {
 	comboBoxCategory.setItems(observableListCategory);
 }
 
-private void setComboBoxPlant() {
-	ObservableList<String> observableListPlant = controller.getPlantList();
+public ComboBox<String> getComboBoxCategory() {
+	return comboBoxCategory;
+}
+
+public ComboBox<String> getComboBoxPlant() {
+	return comboBoxPlant;
+}
+
+public void setComboBoxPlant(ObservableList<String> observableListPlant) {
 	comboBoxPlant.setItems(observableListPlant);
 }
 
@@ -123,11 +114,39 @@ private void setRowSize() {
 	panel.getRowConstraints().addAll(row1, row2, row3, row4, row5);
 }
 
-private void setActionsForButtons() {
-	buttonCencel.setOnAction(e-> controller.cencelAcion());
-	buttonFileChooser.setOnAction(e-> controller.getSelectedFile());
-	buttonActor.setOnAction(e-> controller.getActorsAction());
-	buttonSava.setOnAction(e-> controller.saveAction());
+
+
+public TextField getTextFieldTitle() {
+	return textFieldTitle;
+}
+
+public void setTextFieldTitle(TextField textFieldTitle) {
+	this.textFieldTitle = textFieldTitle;
+}
+
+public TextArea getTextAreaNote() {
+	return textAreaNote;
+}
+
+public void setTextAreaNote(TextArea textAreaNote) {
+	this.textAreaNote = textAreaNote;
+}
+
+
+public Button getButtonCencel() {
+	return buttonCencel;
+}
+
+public Button getButtonSava() {
+	return buttonSava;
+}
+
+public Button getButtonFileChooser() {
+	return buttonFileChooser;
+}
+
+public Button getButtonActor() {
+	return buttonActor;
 }
 
 private void setStage() {
@@ -135,5 +154,6 @@ private void setStage() {
 	stage.setScene(root);
 	stage.show();
 }
+
 
 }

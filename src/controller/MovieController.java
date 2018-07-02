@@ -49,13 +49,17 @@ private void deleteMovie(Movie movie) {
 }
 
 public void  editAction(Movie movie) {
-	List<Actor> list = new LinkedList<>();
+	/*List<Actor> list = new LinkedList<>();
 	movie.setListActor(list);
-	MovieEditView view = new MovieEditView(stage, db, movie);
+	MovieEditView view = new MovieEditView(stage, db, movie);*/
+	//proba add
+	movie.setListActor(db.getMovie_Actors(movie.getId()));
+	MovieEditController movie1 = new MovieEditController(stage, db, movie, 2);
 }
 
 public void addAction() {
-	MovieAddView movie = new MovieAddView(stage, db);
+	//MovieAddView movie = new MovieAddView(stage, db);
+	MovieEditController movie1 = new MovieEditController(stage, db, 1);
 }
 
 public Object viewAction() {
