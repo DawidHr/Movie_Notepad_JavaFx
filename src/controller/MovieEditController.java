@@ -27,7 +27,6 @@ DataBase db;
 MovieEditView view;
 // Mode. 1 jeœli dodawanie nowych, 2. jesli edycja 
 int mode;
-
 File file=null;
 List<Actor> listActor= new LinkedList<>();
 
@@ -60,7 +59,9 @@ private void MainForAdd() {
 	 setActionsForButtons();
  }
 private void MainForEdit() {
-	
+	view.setComboBoxCategory(getCategoryList());
+	 view.setComboBoxPlant(getPlantList());
+	 setActionsForButtons();
 }
 
 
@@ -119,8 +120,9 @@ public void getActorsAction() {
 		category= view.getComboBoxCategory().getSelectionModel().getSelectedItem();
 	if(view.getComboBoxPlant().getSelectionModel().getSelectedItem() != null)
 		plant = view.getComboBoxPlant().getSelectionModel().getSelectedItem();
-	
+	System.out.println("mode");
 	Movie movie = new Movie(view.getTextFieldTitle().getText(), filename, fileUrl, category, plant, view.getTextAreaNote().getText());
+	movie.setListActor(listActor);
 	MovieEditActorsController main = new MovieEditActorsController(stage, db, movie, mode);
 }
 
@@ -135,7 +137,9 @@ public void setData(Movie movie) {
 		view.getComboBoxPlant().getSelectionModel().select(movie.getPlant());
 	if(movie.getFile_url() != "")
 		file = new File(movie.getFile_url());
-	if(!movie.getListActor().isEmpty())
+	/*if(!movie.getListActor().isEmpty())
+		listActor=movie.getListActor();*/
+	if(movie.getListActor() != null)
 		listActor=movie.getListActor();
 	
 }

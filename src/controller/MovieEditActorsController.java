@@ -32,6 +32,7 @@ ObservableList<Actor> list2 = FXCollections.observableArrayList();
 
 public MovieEditActorsController(Stage stage, DataBase db, Movie movie, int mode) {
 	super();
+	System.out.println("MovieEditActorsController");
 	this.stage = stage;
 	this.db = db;
 	this.movie=movie;
@@ -63,10 +64,23 @@ private void MainForAdd() {
 
 private void MainForEdit() {
 	
-	/*List<Actor> list11 = movie.getListActor();
-	list1.addAll(list11);*/
-	System.out.println("asdfgfgfd");
-	//MainForAdd();
+	List<Actor> list11 = movie.getListActor();
+	if(list11 != null)
+	list2.addAll(list11);
+	if(list1.isEmpty() && list2.isEmpty()) {
+		view.getButtonAddActor().setDisable(true);
+		view.getButtonDeleteActor().setDisable(true);
+		view.getButtonSave().setDisable(true);
+		Alert dialog = new Alert(AlertType.INFORMATION);
+		dialog.setTitle("Brak Listy Aktorow");
+		dialog.setHeaderText("Lista Aktorow jest pusta");
+		Platform.runLater(() ->{
+			Optional<ButtonType> response = dialog.showAndWait();
+		});
+	}
+	view.setTableAllActors(list1);
+	view.setTableSelectedActors(list2);
+	setActionsForButtons();
 }
 
 

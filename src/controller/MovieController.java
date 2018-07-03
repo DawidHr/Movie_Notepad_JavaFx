@@ -53,7 +53,12 @@ public void  editAction(Movie movie) {
 	movie.setListActor(list);
 	MovieEditView view = new MovieEditView(stage, db, movie);*/
 	//proba add
+	
 	movie.setListActor(db.getMovie_Actors(movie.getId()));
+	/*for(Actor l: movie.getListActor()) {
+		System.out.println(l.getId()+" "+l.getName());
+	}*/
+	
 	MovieEditController movie1 = new MovieEditController(stage, db, movie, 2);
 }
 
