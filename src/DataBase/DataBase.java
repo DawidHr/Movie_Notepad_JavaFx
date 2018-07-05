@@ -399,19 +399,31 @@ public class DataBase {
 			while(rs.next()) {
 				id= rs.getInt("id");
 			}
-			String query3 = "insert into Movie_Actor(id_movie, id_actor) values(?,?)";
-			for(int i=0; i<movie.getListActor().size();i++) {
-			PreparedStatement stat2 = conn.prepareStatement(query3);
-			stat2.setInt(1, id);
-			stat2.setInt(2, movie.getListActor().get(i).getId());
-			stat2.executeUpdate();
-			}
+			addToMovie_Actor(id,  movie.getListActor());
+			
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		
 	}
 
+	public void addToMovie_Actor(int id, List<Actor> list) {
+		try {
+			String query = "delete from Movie_Actor where id_movie=?";
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setInt(1, id);
+			stat.executeUpdate();
+		for(int i=0; i<list.size();i++) {
+				String query1 = "insert into Movie_Actor(id_movie, id_actor) values(?,?)";
+				PreparedStatement stat1 = conn.prepareStatement(query1);
+				stat1.setInt(1, id);
+				stat1.setInt(2, list.get(i).getId());
+				stat1.executeUpdate();
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
 	public ObservableList<Movie> getAllMovies() {
 		ObservableList<Movie> list = FXCollections.observableArrayList();
 		String query = "select * from Movie";
@@ -483,5 +495,17 @@ public class DataBase {
 			e.printStackTrace();
 		}
 		return list;
+	}
+
+	public void deleteMovie_Actors(int id) {
+		try {
+			String query = "delete from Movie_Actor where id_movie=?";
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setInt(1, id);
+			stat.executeUpdate();
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		
 	}
 }

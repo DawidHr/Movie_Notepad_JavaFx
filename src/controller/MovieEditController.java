@@ -17,7 +17,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import model.Actor;
 import model.Category;
 import model.Movie;
-import view.MovieAddActorsView;
 import view.MovieEditView;
 import view.MovieView;
 
@@ -148,7 +147,7 @@ public void setData(Movie movie) {
 
 public void saveAction() {
 	//Sprawdzenie czy pola nie sa puste
-	if(view.getTextAreaNote().getText().isEmpty())
+	if(view.getTextFieldTitle().getText().isEmpty())
 		return;
 	if(view.getComboBoxCategory().getSelectionModel().getSelectedItem() == null)
 		return;

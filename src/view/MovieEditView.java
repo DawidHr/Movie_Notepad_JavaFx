@@ -1,7 +1,6 @@
 package view;
 
 import DataBase.DataBase;
-import controller.MovieAddController;
 import controller.MovieEditController;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;

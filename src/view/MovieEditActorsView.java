@@ -3,7 +3,6 @@ package view;
 import java.util.Optional;
 
 import DataBase.DataBase;
-import controller.MovieAddActorsController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

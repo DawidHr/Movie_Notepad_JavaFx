@@ -16,7 +16,6 @@ import javafx.scene.control.TableView;
 import javafx.stage.Stage;
 import model.Actor;
 import model.Movie;
-import view.MovieAddView;
 import view.MovieEditActorsView;
 
 public class MovieEditActorsController {
@@ -64,9 +63,22 @@ private void MainForAdd() {
 
 private void MainForEdit() {
 	
+	
+	
+	
 	List<Actor> list11 = movie.getListActor();
 	if(list11 != null)
 	list2.addAll(list11);
+	getFromDBData();
+	//Kasacja Aktorów znajdujacych siê w tabeli 2 by sie nie powtarzali
+	for(int i=0;i< list2.size();i++) {
+		for(int j=0; j< list1.size();j++) {
+			if(list1.get(j).getId() == list2.get(i).getId()) {
+				list1.remove(j);
+			}
+		}
+	}
+	
 	if(list1.isEmpty() && list2.isEmpty()) {
 		view.getButtonAddActor().setDisable(true);
 		view.getButtonDeleteActor().setDisable(true);

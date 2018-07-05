@@ -14,7 +14,6 @@ import model.Actor;
 import model.Movie;
 import view.CategoryView;
 import view.MainView;
-import view.MovieAddView;
 import view.MovieEditView;
 import view.MovieView;
 
@@ -27,10 +26,12 @@ public MovieController(Stage stage, DataBase db) {
 	this.db=db;
 }
 
+//Wyjœcie do menu
 public void cencelAction() {
 	MainView main = new MainView(stage, db);
 }
 
+//Kasacja wybranego filmu
 public void deleteAction(Movie movie) {
 	Alert dialog = new Alert(Alert.AlertType.CONFIRMATION);
 	dialog.setTitle("Ostrzezenie przed kasacja");
@@ -46,37 +47,33 @@ public void deleteAction(Movie movie) {
 
 private void deleteMovie(Movie movie) {
 	db.deleteMovie(movie);
+	db.deleteMovie_Actors(movie.getId());
 }
 
+//Edycja wybranego filmu
 public void  editAction(Movie movie) {
-	/*List<Actor> list = new LinkedList<>();
-	movie.setListActor(list);
-	MovieEditView view = new MovieEditView(stage, db, movie);*/
-	//proba add
-	
 	movie.setListActor(db.getMovie_Actors(movie.getId()));
-	/*for(Actor l: movie.getListActor()) {
-		System.out.println(l.getId()+" "+l.getName());
-	}*/
-	
 	MovieEditController movie1 = new MovieEditController(stage, db, movie, 2);
 }
 
+//Dodawanie nowego filmu
 public void addAction() {
-	//MovieAddView movie = new MovieAddView(stage, db);
 	MovieEditController movie1 = new MovieEditController(stage, db, 1);
 }
 
+//Przeglad wybranego filmu
 public Object viewAction() {
 	// TODO Auto-generated method stub
 	return null;
 }
 
+//Filtrowanie filmów
 public Object filtrAction() {
 	// TODO Auto-generated method stub
 	return null;
 }
 
+//Pobieranie z bazy danych listy filmów i zwracanie jej
 public ObservableList<Movie> getMovies() {
 	return db.getAllMovies();
 }
