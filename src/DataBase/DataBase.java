@@ -36,25 +36,26 @@ public class DataBase {
 			e.printStackTrace();
 		}
 	}
-/*Category*/
-	
-	//Pobieranie wszystkich kategorii
+	/* Category */
+
+	// Pobieranie wszystkich kategorii
 	public List<Category> getAllCategories() {
 		List<Category> list = new LinkedList<>();
 		String query = "Select * from Category";
 		try {
 			Statement stat = conn.createStatement();
 			ResultSet rs = stat.executeQuery(query);
-			while(rs.next()) {
+			while (rs.next()) {
 				list.add(new Category(rs.getInt("id"), rs.getString("name")));
 			}
+			stat.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
-	
-	//Sprawdzanie czy nazwa kategorii znajduje sie w bazie danych
+
+	// Sprawdzanie czy nazwa kategorii znajduje sie w bazie danych
 	public boolean isCategoryOnDb(String text) {
 		boolean isOnDb = false;
 		String query = "select * from Category where name=?";
@@ -63,27 +64,31 @@ public class DataBase {
 			stat = conn.prepareStatement(query);
 			stat.setString(1, text);
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				isOnDb = true;
 			}
+			stat.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return isOnDb;
 	}
-//Dodawanie Kategorii do bazy danych
+
+	// Dodawanie Kategorii do bazy danych
 	public void addCategory(String text) {
 		String query = "insert into Category(name) values(?)";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setString(1, text);
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-// Edycja nazwy kategorii
+
+	// Edycja nazwy kategorii
 	public void editCategory(String oldName, String newName) {
 		String query = "Update Category set name=? where name=?";
 		try {
@@ -91,82 +96,90 @@ public class DataBase {
 			stat.setString(1, newName);
 			stat.setString(2, oldName);
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-// Kasacja kategorii
+
+	// Kasacja kategorii
 	public void deleteCategory(String text) {
 		String query = "delete from Category where name=?";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setString(1, text);
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	public int getIdCategoryByTitle(String category) {
 		String query = "select id from Category where name=?";
-		int id=0;
+		int id = 0;
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setString(1, category);
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
-				id=rs.getInt("id");
+			while (rs.next()) {
+				id = rs.getInt("id");
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return id;
 	}
+
 	public String getStringCategoryByTitle(int id) {
-		String name="";
+		String name = "";
 		String query = "select name from Category where id=?";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setInt(1, id);
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
-				name= rs.getString("name");
+			while (rs.next()) {
+				name = rs.getString("name");
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return name;
 	}
 	/* WYTWORNIE */
-	
-	//Pobieranie wszystkich wytworni
+
+	// Pobieranie wszystkich wytworni
 	public List<String> getAllPlant() {
 		List<String> list = new LinkedList<String>();
 		String query = "Select * from Plant";
 		try {
-		Statement stat = conn.createStatement();
-		ResultSet rs = stat.executeQuery(query);
-		while(rs.next()) {
-			list.add(rs.getString("name"));
-		}
-		} catch(Exception e) {
-		e.printStackTrace();
+			Statement stat = conn.createStatement();
+			ResultSet rs = stat.executeQuery(query);
+			while (rs.next()) {
+				list.add(rs.getString("name"));
+			}
+			stat.close();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
 		return list;
 	}
 
-	//Sprawdzanie czy wytwornia jest w bazie danych
+	// Sprawdzanie czy wytwornia jest w bazie danych
 	public boolean isPlantOnDb(String categoryName) {
 		boolean isPlantOnDB = false;
 		try {
-		String query ="select * from Plant where name=?";
-		PreparedStatement stat = conn.prepareStatement(query);
-		stat.setString(1, categoryName);
-		ResultSet rs = stat.executeQuery();
-		while(rs.next()) {
-			isPlantOnDB = true;
-		}
-		} catch(Exception e) {
+			String query = "select * from Plant where name=?";
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setString(1, categoryName);
+			ResultSet rs = stat.executeQuery();
+			while (rs.next()) {
+				isPlantOnDB = true;
+			}
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return isPlantOnDB;
@@ -175,15 +188,17 @@ public class DataBase {
 	// Dodawanie do bazy danych wytworni
 	public void addPlant(String categoryName) {
 		try {
-		String query = "insert into Plant(name) values(?)";
-		PreparedStatement stat = conn.prepareStatement(query);
-		stat.setString(1, categoryName);
-		stat.executeUpdate();
-		} catch(Exception e) {
+			String query = "insert into Plant(name) values(?)";
+			PreparedStatement stat = conn.prepareStatement(query);
+			stat.setString(1, categoryName);
+			stat.executeUpdate();
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-// Edycja wytwornii
+
+	// Edycja wytwornii
 	public void editPlant(String string, String newName) {
 		String query = "Update Plant set name=? where name=?";
 		try {
@@ -191,86 +206,94 @@ public class DataBase {
 			stat.setString(1, newName);
 			stat.setString(2, string);
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	//kasacja wytwornii
+	// kasacja wytwornii
 	public void deletePlant(String text) {
 		String query = "delete from Plant where name=?";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setString(1, text);
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public int getIdPlantByTitle(String plant) {
 		String query = "select id from Plant where name=?";
-		int id=0;
+		int id = 0;
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setString(1, plant);
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
-				id=rs.getInt("id");
+			while (rs.next()) {
+				id = rs.getInt("id");
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return id;
 	}
-	
+
 	public String getStringPlantByTitle(int id) {
-		String plant="";
+		String plant = "";
 		String query = "select name from Plant where id=?";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setInt(1, id);
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
-				plant=rs.getString("name");
+			while (rs.next()) {
+				plant = rs.getString("name");
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return plant;
 	}
-/*Aktorzy*/
-	
-	//Pobieranie wszytkich aktorów
+	/* Aktorzy */
+
+	// Pobieranie wszytkich aktorów
 	public List<Actor> getAllActors() {
 		List<Actor> list = new LinkedList<>();
 		String query = "select * from Actor";
 		try {
 			Statement stat = conn.createStatement();
 			ResultSet rs = stat.executeQuery(query);
-			while(rs.next()) {
-				list.add(new Actor(rs.getInt("id"), rs.getString("name"), rs.getString("name2"), rs.getString("pseudo"), rs.getString("sex"), rs.getString("hair_color"), rs.getString("hair_size"), rs.getString("note")));
+			while (rs.next()) {
+				list.add(new Actor(rs.getInt("id"), rs.getString("name"), rs.getString("name2"), rs.getString("pseudo"),
+						rs.getString("sex"), rs.getString("hair_color"), rs.getString("hair_size"),
+						rs.getString("note")));
 			}
-			
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return list;
 	}
 
-	//kasacja aktora
+	// kasacja aktora
 	public void deleteActorById(int id) {
 		String query = "delete from Actor where id=?";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setInt(1, id);
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-// Sprawdzanie czy Aktor istnieje w bazie danych
+
+	// Sprawdzanie czy Aktor istnieje w bazie danych
 	public boolean isActorInDb(String name, String name2, String pseudo) {
 		boolean isOnDb = false;
 		String query = "select * from Actor where name = ? and name2 = ? and pseudo = ?";
@@ -280,15 +303,17 @@ public class DataBase {
 			stat.setString(2, name2);
 			stat.setString(3, pseudo);
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
+			while (rs.next()) {
 				isOnDb = true;
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return isOnDb;
 	}
- // Dodawanie aktora do bazy danych
+
+	// Dodawanie aktora do bazy danych
 	public void addActor(Actor actor) {
 		String query = "insert into Actor(name, name2, pseudo, sex, hair_color, hair_size, note) values(?,?,?,?,?,?,?)";
 		try {
@@ -301,11 +326,13 @@ public class DataBase {
 			stat.setString(6, actor.getHair_size());
 			stat.setString(7, actor.getNote());
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-//Edycja aktora
+
+	// Edycja aktora
 	public void editActor(Actor actor, Actor actorNew) {
 		String query = "update Actor set name=?, name2=?, pseudo=?, sex=?, hair_color=?, hair_size=?, note=? where id=?";
 		try {
@@ -319,24 +346,26 @@ public class DataBase {
 			stat.setString(7, actorNew.getNote());
 			stat.setInt(8, actor.getId());
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
 	/* Filmy */
-	
-	//Kasacja filmu
+
+	// Kasacja filmu
 	public void deleteMovie(Movie movie) {
 		String query = "delete from Movie where id =?";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setInt(1, movie.getId());
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void addMovie(Movie movie) {
@@ -351,30 +380,33 @@ public class DataBase {
 			stat.setInt(4, id_category);
 			stat.setInt(5, id_Plant);
 			stat.executeUpdate();
-			
-			int id=0;
+
+			int id = 0;
 			String query2 = "select * from Movie where title=? and file_title=? and file_url =?";
 			PreparedStatement stat1 = conn.prepareStatement(query2);
 			stat1.setString(1, movie.getTitle());
 			stat1.setString(2, movie.getFile_title());
 			stat1.setString(3, movie.getFile_url());
-			ResultSet rs  = stat1.executeQuery();
-			while(rs.next()) {
-				id= rs.getInt("id");
+			ResultSet rs = stat1.executeQuery();
+			while (rs.next()) {
+				id = rs.getInt("id");
 			}
 			String query3 = "insert into Movie_Actor(id_movie, id_actor) values(?,?)";
-			for(int i=0; i<movie.getListActor().size();i++) {
-			PreparedStatement stat2 = conn.prepareStatement(query3);
-			stat2.setInt(1, id);
-			stat2.setInt(2, movie.getListActor().get(i).getId());
-			stat2.executeUpdate();
+			for (int i = 0; i < movie.getListActor().size(); i++) {
+				PreparedStatement stat2 = conn.prepareStatement(query3);
+				stat2.setInt(1, id);
+				stat2.setInt(2, movie.getListActor().get(i).getId());
+				stat2.executeUpdate();
+				stat2.close();
 			}
-		} catch(Exception e) {
+			stat.close();
+			stat1.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
-	
+
 	public void updateMovie(Movie movie) {
 		String query = "update Movie set title=?, file_title=?, file_url=?, id_category=?, id_Plant=? where id=?";
 		try {
@@ -388,23 +420,24 @@ public class DataBase {
 			stat.setInt(5, id_Plant);
 			stat.setInt(6, movie.getId());
 			stat.executeUpdate();
-			
-			int id=0;
+
+			int id = 0;
 			String query2 = "select * from Movie where title=? and file_title=? and file_url =?";
 			PreparedStatement stat1 = conn.prepareStatement(query2);
 			stat1.setString(1, movie.getTitle());
 			stat1.setString(2, movie.getFile_title());
 			stat1.setString(3, movie.getFile_url());
-			ResultSet rs  = stat1.executeQuery();
-			while(rs.next()) {
-				id= rs.getInt("id");
+			ResultSet rs = stat1.executeQuery();
+			while (rs.next()) {
+				id = rs.getInt("id");
 			}
-			addToMovie_Actor(id,  movie.getListActor());
-			
-		} catch(Exception e) {
+			addToMovie_Actor(id, movie.getListActor());
+			stat.close();
+			stat1.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 
 	public void addToMovie_Actor(int id, List<Actor> list) {
@@ -413,47 +446,53 @@ public class DataBase {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setInt(1, id);
 			stat.executeUpdate();
-		for(int i=0; i<list.size();i++) {
+			for (int i = 0; i < list.size(); i++) {
 				String query1 = "insert into Movie_Actor(id_movie, id_actor) values(?,?)";
 				PreparedStatement stat1 = conn.prepareStatement(query1);
 				stat1.setInt(1, id);
 				stat1.setInt(2, list.get(i).getId());
 				stat1.executeUpdate();
+				stat1.close();
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
+
 	public ObservableList<Movie> getAllMovies() {
 		ObservableList<Movie> list = FXCollections.observableArrayList();
 		String query = "select * from Movie";
 		try {
 			Statement stat = conn.createStatement();
 			ResultSet rs = stat.executeQuery(query);
-			while(rs.next()) {
+			while (rs.next()) {
 				String category = getStringCategoryByTitle(rs.getInt("id_category"));
 				String Plant = getStringPlantByTitle(rs.getInt("id_Plant"));
-				list.add(new Movie(rs.getInt("id"), rs.getString("title"), rs.getString("file_title"), rs.getString("file_url"), category, Plant, rs.getString("note")));
+				list.add(new Movie(rs.getInt("id"), rs.getString("title"), rs.getString("file_title"),
+						rs.getString("file_url"), category, Plant, rs.getString("note")));
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
 	}
-	
-	//Pobieranie id filmu
+
+	// Pobieranie id filmu
 	public int getIdMovie(Movie movie) {
-		int id=0;
+		int id = 0;
 		String query = "select id from Movie where title=? and file_title=?";
 		try {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setString(1, movie.getTitle());
 			stat.setString(2, movie.getFile_title());
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
-				id=rs.getInt("id");
+			while (rs.next()) {
+				id = rs.getInt("id");
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return id;
@@ -462,13 +501,14 @@ public class DataBase {
 	public void addActorsToMovie(int id_movie, List<Actor> listActor) {
 		String query = "insert into Movie_Actor(id_movie, id_actor) values(?, ?)";
 		try {
-			for(int i=0;i<listActor.size();i++) {
-			PreparedStatement stat = conn.prepareStatement(query);
-			stat.setInt(1, id_movie);
-			stat.setInt(2, listActor.get(i).getId());
-			stat.executeUpdate();
+			for (int i = 0; i < listActor.size(); i++) {
+				PreparedStatement stat = conn.prepareStatement(query);
+				stat.setInt(1, id_movie);
+				stat.setInt(2, listActor.get(i).getId());
+				stat.executeUpdate();
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
@@ -480,18 +520,22 @@ public class DataBase {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setInt(1, id);
 			ResultSet rs = stat.executeQuery();
-			while(rs.next()) {
-		
+			while (rs.next()) {
+
 				String query1 = "select * from Actor where id=?";
 				PreparedStatement stat1 = conn.prepareStatement(query1);
 				stat1.setInt(1, rs.getInt("id_actor"));
 				ResultSet rs1 = stat1.executeQuery();
-				while(rs1.next()) {
-					list.add(new Actor(rs1.getInt("id"), rs1.getString("name"), rs1.getString("name2"), rs1.getString("pseudo"),  rs1.getString("sex"), rs1.getString("hair_color"), rs1.getString("hair_size"), rs1.getString("note")));
+				while (rs1.next()) {
+					list.add(new Actor(rs1.getInt("id"), rs1.getString("name"), rs1.getString("name2"),
+							rs1.getString("pseudo"), rs1.getString("sex"), rs1.getString("hair_color"),
+							rs1.getString("hair_size"), rs1.getString("note")));
 				}
-				
+				stat1.close();
+
 			}
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return list;
@@ -503,9 +547,10 @@ public class DataBase {
 			PreparedStatement stat = conn.prepareStatement(query);
 			stat.setInt(1, id);
 			stat.executeUpdate();
-		} catch(Exception e) {
+			stat.close();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 	}
 }
