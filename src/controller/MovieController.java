@@ -10,10 +10,21 @@ import java.util.Optional;
 import DataBase.DataBase;
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.geometry.HPos;
+import javafx.geometry.Insets;
+import javafx.geometry.VPos;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.Slider;
+import javafx.scene.layout.ColumnConstraints;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.VBox;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
 import javafx.scene.media.MediaView;
@@ -34,7 +45,7 @@ public MovieController(Stage stage, DataBase db) {
 	this.db=db;
 }
 
-//Wyjúcie do menu
+//Wyj≈õcie do menu
 public void cencelAction() {
 	MainView main = new MainView(stage, db);
 }
@@ -71,33 +82,15 @@ public void addAction() {
 
 //Przeglad wybranego filmu
 public void viewAction() {
-	try {
-		File f = new File("D:\\Muza+Teledyski\\Rapoholika - Pasja ( Official video ) prod. SwR.mp4");
-		URI u = f.toURI();
-		Media media = new Media(u.toString());
-		MediaPlayer mediPlayer = new MediaPlayer(media);
-		MediaView mediaView = new MediaView();
-		Pane panel2 = new Pane();
-		panel2.getChildren().add(mediaView);
-		Stage stage2 = new Stage();
-		Scene scene2 = new Scene(panel2, 400,400);
-		stage2.setScene(scene2);
-		stage2.initOwner(stage);
-		stage2.show();
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	
-	
+WatchMovieController controller = new WatchMovieController(stage);	
 }
 
-//Filtrowanie filmÛw
+//Filtrowanie film√≥w
 public void filtrAction() {
 	MovieFilterController controller = new MovieFilterController(stage, db);
 }
 
-//Pobieranie z bazy danych listy filmÛw i zwracanie jej
+//Pobieranie z bazy danych listy film√≥w i zwracanie jej
 public ObservableList<Movie> getMovies() {
 	return db.getAllMovies();
 }
